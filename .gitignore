@@ -1,0 +1,8 @@
+# OSM / GIS data
+*.pbf
+*.osm
+*.geojson
+*.gpkg
+*.shp
+*.db
+data/
