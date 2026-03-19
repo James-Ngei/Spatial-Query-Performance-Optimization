@@ -76,7 +76,7 @@ if len(gdf) > 100000:
 
 # Connect to PostGIS
 print("\n📤 Connecting to PostGIS...")
-engine = create_engine('postgresql://gisuser:gispass@localhost:5432/spatial_perf')
+engine = create_engine('postgresql://gisuser:gispass@localhost:5433/spatial_perf')
 
 # Test connection
 try:

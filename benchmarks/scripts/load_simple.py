@@ -2,13 +2,15 @@
 Simple loader using GeoPandas (handles osmium format)
 Run: python scripts/load_simple.py
 """
+import os
 import geopandas as gpd
 from sqlalchemy import create_engine, text
 
 print("🔄 Loading Nairobi buildings to PostGIS...")
 
-# Connect to PostGIS
-engine = create_engine('postgresql://gisuser:gispass@localhost:5432/spatial_perf')
+# Connect to PostGIS (use DATABASE_URL if provided)
+DATABASE_URL = os.environ["DATABASE_URL"]
+engine = create_engine(DATABASE_URL)
 
 try:
     with engine.connect() as conn:
@@ -41,10 +43,13 @@ if 'geometry' not in keep_cols:
     keep_cols.append('geometry')
 
 gdf = gdf[keep_cols]
+gdf = gdf.set_geometry("geometry")
+gdf = gdf.rename_geometry("geom")
+
 
 # Load to database
 print(f"\n📤 Loading {len(gdf):,} features to PostGIS...")
-gdf.to_postgis('buildings', engine, if_exists='replace', index=False, chunksize=1000)
+gdf.to_postgis('buildings', engine, if_exists='append', index=False, chunksize=1000)
 
 # Verify
 with engine.connect() as conn:
@@ -62,7 +67,7 @@ with engine.connect() as conn:
     
     # Geometry distribution
     result = conn.execute(text("""
-        SELECT ST_GeometryType(geometry) as type, COUNT(*) as count
+        SELECT ST_GeometryType(geom) as type, COUNT(*) as count
         FROM buildings
         GROUP BY type
         ORDER BY count DESC

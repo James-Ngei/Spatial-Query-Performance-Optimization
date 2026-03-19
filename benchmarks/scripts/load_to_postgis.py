@@ -73,7 +73,7 @@ print(f"  Polygons: {sum(gdf.geometry.type == 'Polygon')}")
 
 # Connect to PostGIS
 print("\n📤 Uploading to PostGIS...")
-engine = create_engine('postgresql://gisuser:gispass@localhost:5432/spatial_perf')
+engine = create_engine('postgresql://gisuser:gispass@localhost:5433/spatial_perf')
 
 # Load to database (no index yet - we'll benchmark that)
 gdf.to_postgis('osm_features', engine, if_exists='replace', index=False)

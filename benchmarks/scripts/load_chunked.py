@@ -11,7 +11,7 @@ import sys
 print("🔄 Loading OSM data in chunks...")
 
 # Connect to PostGIS first
-engine = create_engine('postgresql://gisuser:gispass@localhost:5432/spatial_perf')
+engine = create_engine('postgresql://gisuser:gispass@localhost:5433/spatial_perf')
 
 # Test connection
 try:

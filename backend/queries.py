@@ -23,7 +23,7 @@ QUERIES: List[BenchmarkQuery] = [
         sql_template="""
             SELECT osm_id, building, name
             FROM buildings
-            WHERE geometry && ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, 4326)
+            WHERE geom && ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, 4326)
         """,
         params={'xmin': 36.82, 'ymin': -1.29, 'xmax': 36.84, 'ymax': -1.27}
     ),
@@ -36,8 +36,8 @@ QUERIES: List[BenchmarkQuery] = [
         sql_template="""
             SELECT osm_id, building, name
             FROM buildings
-            WHERE geometry && ST_Buffer(ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326), 0.01)
-            AND ST_Intersects(geometry, ST_Buffer(ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326), 0.01))
+            WHERE geom && ST_Buffer(ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326), 0.01)
+            AND ST_Intersects(geom, ST_Buffer(ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326), 0.01))
         """,
         params={'lon': 36.8219, 'lat': -1.2921}
     ),
@@ -49,10 +49,10 @@ QUERIES: List[BenchmarkQuery] = [
         use_case="Nearby features query",
         sql_template="""
             SELECT osm_id, building, name,
-                   ST_Distance(geometry, ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326)) as dist
+                   ST_Distance(geom, ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326)) as dist
             FROM buildings
-            WHERE geometry && ST_Expand(ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326), 0.005)
-            AND ST_Distance(geometry, ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326)) < 0.005
+            WHERE geom && ST_Expand(ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326), 0.005)
+            AND ST_Distance(geom, ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326)) < 0.005
             ORDER BY dist
             LIMIT 100
         """,
@@ -66,7 +66,7 @@ QUERIES: List[BenchmarkQuery] = [
         use_case="Closest buildings to a point",
         sql_template="""
             SELECT osm_id, building, name,
-                   geometry <-> ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326) as dist
+                   geom <-> ST_SetSRID(ST_MakePoint({lon}, {lat}), 4326) as dist
             FROM buildings
             ORDER BY dist
             LIMIT 50
@@ -82,8 +82,8 @@ QUERIES: List[BenchmarkQuery] = [
         sql_template="""
             SELECT osm_id, building, name
             FROM buildings
-            WHERE geometry && ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, 4326)
-            AND ST_Intersects(geometry, ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, 4326))
+            WHERE geom && ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, 4326)
+            AND ST_Intersects(geom, ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, 4326))
         """,
         params={'xmin': 36.815, 'ymin': -1.295, 'xmax': 36.825, 'ymax': -1.285}
     ),
@@ -96,7 +96,7 @@ QUERIES: List[BenchmarkQuery] = [
         sql_template="""
             SELECT COUNT(*) as total
             FROM buildings
-            WHERE geometry && ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, 4326)
+            WHERE geom && ST_MakeEnvelope({xmin}, {ymin}, {xmax}, {ymax}, 4326)
         """,
         params={'xmin': 36.80, 'ymin': -1.30, 'xmax': 36.85, 'ymax': -1.28}
     ),

@@ -2,7 +2,7 @@
 FastAPI backend for spatial query performance benchmarking
 Run: uvicorn backend.main:app --reload
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
@@ -15,16 +15,33 @@ from backend.benchmark import run_query, get_table_stats, check_index_exists, cr
 app = FastAPI(
     title="Spatial Query Performance API",
     description="Benchmark PostGIS spatial queries with/without indexes",
-    version="1.0.0"
+    version="1.0.0",
+    debug=True,
 )
+
+ALLOWED_ORIGINS = [
+    "http://spatial-query-perf.s3-website.eu-north-1.amazonaws.com",
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://localhost:8001",
+    "http://localhost",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def add_private_network_header(request: Request, call_next):
+    response = await call_next(request)
+    if request.headers.get("access-control-request-private-network") == "true":
+        response.headers["Access-Control-Allow-Private-Network"] = "true"
+    return response
 
 class BenchmarkRequest(BaseModel):
     query_id: str
