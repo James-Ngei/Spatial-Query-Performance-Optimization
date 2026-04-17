@@ -262,9 +262,9 @@ MIT License - see [LICENSE](LICENSE) file
 ## Author
 
 **James Ngei**
-- Portfolio: [yourportfolio.com](https://james-ngei.github.io)
-- GitHub: [@yourusername](https://github.com/James-Ngei)
-- LinkedIn: [Your Name](https://linkedin.com/in/james-ngei-61461b1a5)
+- Portfolio: [james-ngei.github.io](https://james-ngei.github.io)
+- GitHub: [James-Ngei](https://github.com/James-Ngei)
+- LinkedIn: [James Ngei](https://linkedin.com/in/james-ngei-61461b1a5)
 
 ## Acknowledgments
 
